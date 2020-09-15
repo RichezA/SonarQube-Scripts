@@ -18,12 +18,12 @@ $Token64 = [System.Convert]::ToBase64String($Token)
  
 $Headers = @{ Authorization = [string]::Format("Basic {0}", $Token64) }
  
-$QualityGateResult = Invoke-RestMethod -Method Get -Uri http://$ServerName/api/qualitygates/project_status?projectKey=$ProjectKey -Headers $Headers
-$QualityGateResult | ConvertTo-Json | Write-Host
+$Result = Invoke-RestMethod -Method Get -Uri http://$ServerName/api/qualitygates/project_status?projectKey=$ProjectKey -Headers $Headers
+$Result | ConvertTo-Json | Write-Host
  
 if ($QualityGateResult.projectStatus.status -eq "OK"){
-    Write-Host "Quality Gate Succeeded"
+    Write-Host "Quality Gate Succeeded."
 }
 else{
-    throw "Quality gate failed. Please check and fix the issues by reviewing the same."
+    throw "Quality gate failed."
 }
