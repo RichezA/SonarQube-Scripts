@@ -13,15 +13,16 @@ Param(
     [String] $ProjectKey
 )
 
-$Token = [System.Text.Encoding]::UTF8.GetBytes($AccesToken + ":")
+$Token = [System.Text.Encoding]::UTF8.GetBytes("$($AccesToken)" + ":")
 $Token64 = [System.Convert]::ToBase64String($Token)
+$basicAuth = [string]::Format("Bearer {0}", $Token64)
  
-$Headers = @{ Authorization = [string]::Format("Basic {0}", $Token64) }
+$Headers = @{ Authorization = $basicAuth }
+
+$Result = Invoke-RestMethod -Uri http://$ServerName/api/qualitygates/project_status?projectKey=$ProjectKey -Headers $Headers
+$Result | ConvertTo-Json
  
-$Result = Invoke-RestMethod -Method Get -Uri http://$ServerName/api/qualitygates/project_status?projectKey=$ProjectKey -Headers $Headers
-$Result | ConvertTo-Json | Write-Host
- 
-if ($QualityGateResult.projectStatus.status -eq "OK"){
+if ($Result.projectStatus.status -eq "OK"){
     Write-Host "Quality Gate Succeeded."
 }
 else{
