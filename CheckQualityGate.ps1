@@ -15,9 +15,9 @@ Param(
 
 $Token = [System.Text.Encoding]::UTF8.GetBytes("$($AccesToken)" + ":")
 $Token64 = [System.Convert]::ToBase64String($Token)
-$basicAuth = [string]::Format("Bearer {0}", $Token64)
+$bearerAuth = [string]::Format("Bearer {0}", $Token64)
  
-$Headers = @{ Authorization = $basicAuth }
+$Headers = @{ Authorization = $bearerAuth }
 
 $Result = Invoke-RestMethod -Uri http://$ServerName/api/qualitygates/project_status?projectKey=$ProjectKey -Headers $Headers
 $Result | ConvertTo-Json
